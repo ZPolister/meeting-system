@@ -1,0 +1,5 @@
+server:
+  port: 36002
+spring:
+  profiles:
+    active: github
