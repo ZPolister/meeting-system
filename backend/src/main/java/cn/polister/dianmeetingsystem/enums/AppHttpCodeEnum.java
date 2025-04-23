@@ -29,7 +29,9 @@ public enum AppHttpCodeEnum {
     USER_BANNED(511, "用户已被禁用"),
     EMAIL_CODE_SEND(512, "验证码请求过于频繁"),
     DATA_NOT_EXIST(513, "数据不存在"),
-    PARAMETER_INVALID(400, "参数校验错误");
+    PARAMETER_INVALID(400, "参数校验错误"),
+    USER_WAIT_AUDIT(514, "账户待审核"),
+    USER_AUDIT_FAIL(515, "账户审核未通过");
 
 
     final int code;
