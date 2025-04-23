@@ -31,7 +31,11 @@ public enum AppHttpCodeEnum {
     DATA_NOT_EXIST(513, "数据不存在"),
     PARAMETER_INVALID(400, "参数校验错误"),
     USER_WAIT_AUDIT(514, "账户待审核"),
-    USER_AUDIT_FAIL(515, "账户审核未通过");
+    USER_AUDIT_FAIL(515, "账户审核未通过"),
+    USER_NOT_FOUND(405, "用户不存在"),
+    USER_ALREADY_AUDIT(516, "账号已经审批"),
+    USER_NOT_ALLOW_BAN(517, "不能封禁非正常状态的用户"),
+    USER_NOT_ALLOW_RECOVER(518, "不能恢复非封禁状态用户");
 
 
     final int code;
