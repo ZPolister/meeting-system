@@ -16,7 +16,7 @@ import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/account")
+@RequestMapping("/api/account")
 @Tag(name = "用户信息管理模块", description = "处理用户信息的获取和更新")
 public class AccountController {
     @Resource
