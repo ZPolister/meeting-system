@@ -36,6 +36,8 @@ public class Account  {
 
     private String phone;
 
+    private String email;
+
     private Double balance;
 
     private String statusType;
