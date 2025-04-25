@@ -28,6 +28,8 @@ public class Account  {
 
     private String password;
 
+    private String email;
+
     private String nickName;
 
     private String roleName;
@@ -35,8 +37,6 @@ public class Account  {
     private String company;
 
     private String phone;
-
-    private String email;
 
     private Double balance;
 

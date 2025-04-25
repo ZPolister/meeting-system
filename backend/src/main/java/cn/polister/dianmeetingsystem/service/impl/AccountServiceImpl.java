@@ -50,11 +50,17 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     private String fromMail;
 
     public void sendVerificationCode(String email, String type) {
+        if ("register".equals(type)) {
+            if (accountMapper.existsByEmail(email)) {
+                throw new SystemException(AppHttpCodeEnum.EMAIL_EXIST);
+            }
+        }
+
         checkRequestFrequency(email, type);
 
         String code = generateRandomCode();
         String keyPrefix = type.equals("register") ? AuthConstants.REGISTER_CODE_KEY : AuthConstants.RESET_CODE_KEY;
-        redisTemplate.opsForValue().set(keyPrefix, code, AuthConstants.CODE_EXPIRE);
+        redisTemplate.opsForValue().set(keyPrefix + email, code, AuthConstants.CODE_EXPIRE);
         sendVerificationEmail(email, code, type);
     }
 
@@ -86,27 +92,28 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
 
     private void sendVerificationEmail(String to, String code, String type) {
         String subject = "注册验证码";
-        String content = "您的注册验证码是：" + code + "，有效期5分钟";
+        String content = "您的注册验证码是：" + code + "，有效期5分钟，请勿泄露给他人";
         
         if ("reset".equals(type)) {
             subject = "密码重置验证码";
-            content = "您正在重置密码，验证码：" + code + "，请勿泄露给他人";
+            content = "您正在重置密码，验证码：" + code + "，有效期为5分钟，请勿泄露给他人";
         }
         SimpleMailMessage message = new SimpleMailMessage();
         message.setFrom(fromMail);
         message.setTo(to);
-        message.setSubject("会议室预订系统注册验证码");
-        message.setText("您的验证码是：" + code + "，有效期为5分钟");
+        message.setSubject("【Dian-Meeting】" + subject);
+        message.setText(content);
         mailSender.send(message);
     }
 
     @Transactional
     public void register(RegisterDto dto) {
-        validateVerificationCode(dto.getEmail(), dto.getCode(), "register");
 
         if (accountMapper.existsByUsername(dto.getUsername())) {
             throw new SystemException(AppHttpCodeEnum.USERNAME_EXIST);
         }
+
+        validateVerificationCode(dto.getEmail(), dto.getCode(), "register");
 
         if (accountMapper.existsByEmail(dto.getEmail())) {
             throw new SystemException(AppHttpCodeEnum.EMAIL_EXIST);
@@ -162,8 +169,8 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
                                                            String mail,
                                                            String userStatus) {
         LambdaQueryWrapper<Account> wrapper = new LambdaQueryWrapper<>();
-        wrapper.eq(StringUtils.hasText(username), Account::getUsername, username)
-                .eq(StringUtils.hasText(mail), Account::getEmail, mail)
+        wrapper.like(StringUtils.hasText(username), Account::getUsername, username)
+                .like(StringUtils.hasText(mail), Account::getEmail, mail)
                 .eq(StringUtils.hasText(userStatus), Account::getStatusType, userStatus);
 
         Page<Account> page = new Page<>(pageNum, pageSize);

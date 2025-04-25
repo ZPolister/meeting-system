@@ -9,9 +9,11 @@ import cn.polister.dianmeetingsystem.entity.dto.UserInfoAdminDto;
 import cn.polister.dianmeetingsystem.service.AccountService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+@Tag(name = "用户管理模块", description = "用户管理相关接口")
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
@@ -24,9 +26,9 @@ public class UserController {
     @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
     public ResponseResult<Page<Account>> getUserListByPage(@RequestParam Integer pageNum,
                                                            @RequestParam Integer pageSize,
-                                                           @RequestParam String username,
-                                                           @RequestParam String mail,
-                                                           @RequestParam String userStatus) {
+                                                           @RequestParam(required = false) String username,
+                                                           @RequestParam(required = false) String mail,
+                                                           @RequestParam(required = false) String userStatus) {
         return accountService.getUserListByPage(pageNum, pageSize,
                                             username, mail, userStatus);
     }

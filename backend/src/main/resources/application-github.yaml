@@ -3,11 +3,11 @@ spring:
     # redis配置
     redis:
       # Redis数据库索引（默认为0）
-      database: 1
+      database: ${redis_database}
       # Redis服务器地址
       host: ${redis_host}
       # Redis服务器连接端口
-      port: 6379
+      port: ${redis_port}
       # Redis服务器连接密码（默认为空）
       password: ${redis_password}
       # 连接超时时间
@@ -25,9 +25,9 @@ spring:
   application:
     name: info-sys
   datasource:
-    url: jdbc:mysql://${mysql_url}/health_data?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
-    username: 
-    password: 
+    url: jdbc:mysql://${mysql_url}/${mysql_database_name}?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
+    username: ${mysql_username}
+    password: ${mysql_password}
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     pathmatch:
