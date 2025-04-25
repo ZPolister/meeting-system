@@ -1,5 +1,6 @@
 package cn.polister.dianmeetingsystem.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.io.Serializable;
@@ -38,7 +39,7 @@ public class Account  {
 
     private String phone;
 
-    private Double balance;
+    private BigDecimal balance;
 
     private String statusType;
 

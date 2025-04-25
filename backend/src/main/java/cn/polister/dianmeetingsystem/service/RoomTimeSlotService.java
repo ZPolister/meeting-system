@@ -12,4 +12,5 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface RoomTimeSlotService extends IService<RoomTimeSlot> {
 
+    void removeByRoomId(Long id);
 }

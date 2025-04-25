@@ -1,5 +1,6 @@
 package cn.polister.dianmeetingsystem.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class MeetingRoom  {
 
     private Integer hasProjector;
 
-    private Double pricePerHour;
+    private BigDecimal pricePerHour;
 
     private String roomStatus;
 

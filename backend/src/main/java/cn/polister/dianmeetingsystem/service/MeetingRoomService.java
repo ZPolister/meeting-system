@@ -1,6 +1,9 @@
 package cn.polister.dianmeetingsystem.service;
 
 import cn.polister.dianmeetingsystem.entity.MeetingRoom;
+import cn.polister.dianmeetingsystem.entity.dto.MeetingRoomDto;
+import cn.polister.dianmeetingsystem.entity.vo.MeetingRoomVo;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
 
@@ -12,4 +15,9 @@ import com.baomidou.mybatisplus.extension.service.IService;
  */
 public interface MeetingRoomService extends IService<MeetingRoom> {
 
+    void saveWithTimeSlots(MeetingRoomDto meetingRoom);
+
+    void deleteMeetingRoom(Long id);
+
+    Page<MeetingRoomVo> getMeetingRoomsByPage(Integer pageNum, Integer pageSize, String roomType, String roomStatus);
 }
