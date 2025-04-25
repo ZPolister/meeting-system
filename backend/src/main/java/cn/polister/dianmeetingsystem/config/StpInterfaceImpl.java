@@ -35,13 +35,13 @@ public class StpInterfaceImpl implements StpInterface {
      */
     @Override
     public List<String> getRoleList(Object loginId, String loginType) {
-        Account account = accountMapper.selectById(Long.parseLong((String)loginId));
+        Account account = accountMapper.selectById(Long.parseLong(String.valueOf(loginId)));
         return new ArrayList<>(List.of(new String[]{account.getRoleName()}));
     }
 
     @Override
     public SaDisableWrapperInfo isDisabled(Object loginId, String service) {
-        Account account = accountMapper.selectById(Long.parseLong((String)loginId));
+        Account account = accountMapper.selectById(Long.parseLong(String.valueOf(loginId)));
         if (Objects.isNull(account)
                 || !UserConstants.USER_STATUS_FREEZE.equals(account.getStatusType())) {
             return SaDisableWrapperInfo.createNotDisabled();
