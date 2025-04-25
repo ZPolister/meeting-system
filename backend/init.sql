@@ -6,6 +6,7 @@ CREATE TABLE `account` (
                            id BIGINT PRIMARY KEY AUTO_INCREMENT,
                            username VARCHAR(50) UNIQUE NOT NULL,
                            password VARCHAR(100) NOT NULL,
+                           email VARCHAR(100) UNIQUE NOT NULL,
                            nick_name VARCHAR(50) NOT NULL,
                            role_name VARCHAR(20) NOT NULL CHECK (role_name IN ('admin', 'worker', 'user')),
                            company VARCHAR(100),
@@ -77,7 +78,7 @@ CREATE TABLE room_time_slot (
                                 id BIGINT PRIMARY KEY AUTO_INCREMENT,
                                 room_id BIGINT NOT NULL,
                                 time_slot DATETIME NOT NULL,
-                                status_type TINYINT NOT NULL DEFAULT 0,
+                                status_type VARCHAR(20) NOT NULL DEFAULT '空闲' CHECK (status_type IN ('空闲', '锁定', '预定')),
                                 del_flag TINYINT DEFAULT 0,
 
                                 FOREIGN KEY (room_id) REFERENCES meeting_room(id) ON DELETE CASCADE,

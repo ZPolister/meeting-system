@@ -1,5 +1,5 @@
 server:
-  port: 36002
+  port: 36362
 spring:
   profiles:
     active: github
