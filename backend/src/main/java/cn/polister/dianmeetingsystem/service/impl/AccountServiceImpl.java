@@ -244,7 +244,9 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     @Override
     public Boolean updateUserInfo(UserInfoAdminDto userInfoAdminDto) {
         Account account = BeanUtil.toBean(userInfoAdminDto, Account.class);
-        account.setPassword(PasswordUtil.encode(account.getPassword()));
+        if (Objects.nonNull(account.getPassword())) {
+            account.setPassword(PasswordUtil.encode(account.getPassword()));
+        }
         return this.updateById(account);
     }
 

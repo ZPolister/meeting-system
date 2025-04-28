@@ -31,7 +31,11 @@ public class MeetingRoom  {
 
     private Integer capacity;
 
-    private Integer hasProjector;
+    private Boolean hasProjector;
+
+    private Boolean hasSound;
+
+    private Boolean hasNetwork;
 
     private BigDecimal pricePerHour;
 
