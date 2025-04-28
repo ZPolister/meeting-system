@@ -2,6 +2,7 @@ package cn.polister.dianmeetingsystem.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.Account;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
@@ -35,7 +36,7 @@ public class UserController {
 
     @Operation(summary = "审批用户注册", description = "通过待审批或未通过的用户的注册申请")
     @PostMapping("/audit/{userId}")
-    @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
+    @SaCheckRole(value = {UserConstants.USER_ROLE_ADMIN, UserConstants.USER_ROLE_WORKER}, mode = SaMode.OR)
     public ResponseResult<Boolean> auditRegister(@PathVariable Long userId) {
         return ResponseResult.okResult(accountService.auditRegister(userId));
     }
