@@ -14,4 +14,7 @@ public class LoginDto {
     @Schema(description = "登录密码", example = "securePwd123", requiredMode = Schema.RequiredMode.REQUIRED)
     @NotBlank(message = "密码不能为空")
     private String password;
+
+    @Schema(description = "记住我", example = "false", requiredMode = Schema.RequiredMode.REQUIRED)
+    private Boolean rememberMe;
 }
