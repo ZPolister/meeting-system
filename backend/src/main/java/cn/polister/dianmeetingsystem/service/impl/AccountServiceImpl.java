@@ -17,6 +17,7 @@ import cn.polister.dianmeetingsystem.exception.SystemException;
 import cn.polister.dianmeetingsystem.mapper.AccountMapper;
 import cn.polister.dianmeetingsystem.service.AccountService;
 import cn.polister.dianmeetingsystem.utils.PasswordUtil;
+import cn.polister.dianmeetingsystem.utils.RedissonLock;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -46,6 +47,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
     private final AccountMapper accountMapper;
     private final RedisTemplate<String, String> redisTemplate;
     private final JavaMailSender mailSender;
+    private final RedissonLock redissonLock;
 
     @Value("${mail.from}")
     private String fromMail;
@@ -282,4 +284,37 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         accountMapper.updateById(account);
         return null;
     }
+
+    @Override
+    public void payOrder(BigDecimal totalPrice, Long userId) {
+        Account account = this.getById(userId);
+        if (account.getBalance().compareTo(totalPrice) < 0) {
+            throw new SystemException(AppHttpCodeEnum.BALANCE_NOT_ENOUGH);
+        }
+        account.setBalance(account.getBalance().subtract(totalPrice));
+        this.updateById(account);
+    }
+
+    @Override
+    public void refundOrder(BigDecimal totalPrice, Long userId) {
+        Account account = this.getById(userId);
+        account.setBalance(account.getBalance().add(totalPrice));
+        this.updateById(account);
+    }
+
+    @Override
+    public void rechargeBalance(long loginIdAsLong, BigDecimal amount) {
+        if (!redissonLock.lock(UserConstants.USER_REDIS_LOCK_KEY + loginIdAsLong, 10000L)) {
+            throw new SystemException(AppHttpCodeEnum.RECHARGE_FAIL);
+        }
+        try {
+            Account account = this.getById(loginIdAsLong);
+            account.setBalance(account.getBalance().add(amount));
+            this.updateById(account);
+        } finally {
+            redissonLock.unlock(UserConstants.USER_REDIS_LOCK_KEY + loginIdAsLong);
+        }
+    }
+
+
 }

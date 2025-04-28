@@ -1,5 +1,6 @@
 package cn.polister.dianmeetingsystem.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.io.Serializable;
@@ -28,11 +29,13 @@ public class CancellationApplication  {
 
     private Date applyTime;
 
-    private Integer refundPercent;
+    private BigDecimal refundPercent;
 
     private Long staffId;
 
     private String auditStatus;
+
+    private String auditReason;
 
     private String note;
 
@@ -43,6 +46,5 @@ public class CancellationApplication  {
     private Date updateTime;
 
     private Integer delFlag;
-
 
 }

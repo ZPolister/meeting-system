@@ -1,5 +1,6 @@
 package cn.polister.dianmeetingsystem.entity;
 
+import java.math.BigDecimal;
 import java.util.Date;
 
 import java.io.Serializable;
@@ -32,7 +33,7 @@ public class RoomOrder  {
 
     private Date endTime;
 
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     private String orderStatus;
 
@@ -44,7 +45,7 @@ public class RoomOrder  {
 
     private Date cancelTime;
 
-    private Double refundAmount;
+    private BigDecimal refundAmount;
 
     private Integer delFlag;
 

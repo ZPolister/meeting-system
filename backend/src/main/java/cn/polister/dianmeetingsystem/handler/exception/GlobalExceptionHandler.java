@@ -1,6 +1,7 @@
 package cn.polister.dianmeetingsystem.handler.exception;
 
 import cn.dev33.satoken.exception.NotLoginException;
+import cn.dev33.satoken.exception.NotRoleException;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
 import cn.polister.dianmeetingsystem.enums.AppHttpCodeEnum;
 import cn.polister.dianmeetingsystem.exception.SystemException;
@@ -59,8 +60,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(NotLoginException.class)
     public ResponseResult handleNotLoginException(NotLoginException e, HttpServletResponse response) {
-        log.error(e.toString(), e);
-        response.setStatus(401);
+        log.info("未登录操作", e);
         return ResponseResult.errorResult(AppHttpCodeEnum.NEED_LOGIN);
+    }
+
+    @ExceptionHandler(NotRoleException.class)
+    public ResponseResult handleNotRoleException(NotRoleException e, HttpServletResponse response) {
+        log.info("角色校验未通过", e);
+        return ResponseResult.errorResult(AppHttpCodeEnum.NO_OPERATOR_AUTH);
     }
 }

@@ -35,7 +35,21 @@ public enum AppHttpCodeEnum {
     USER_NOT_FOUND(405, "用户不存在"),
     USER_ALREADY_AUDIT(516, "账号已经审批"),
     USER_NOT_ALLOW_BAN(517, "不能封禁非正常状态的用户"),
-    USER_NOT_ALLOW_RECOVER(518, "不能恢复非封禁状态用户");
+    USER_NOT_ALLOW_RECOVER(518, "不能恢复非封禁状态用户"),
+    ORDER_TIME_SLOT_NOT_FREE(519, "所选会议室已被预定"),
+    ORDER_NOT_EXIST(406, "订单不存在"),
+    ORDER_EXPIRED(521, "订单已过期"),
+    ORDER_PAYED(522,"不能重复支付订单"),
+    ORDER_CREATE_FAILED(523,  "创建订单失败"),
+    ORDER_PAY_FAILED(524, "订单支付失败"),
+    BALANCE_NOT_ENOUGH(525, "余额不足，请充值"),
+    ORDER_CANCEL_FAILED(526, "申请取消订单失败"),
+    ORDER_CANCELING(527, "订单正在取消，不能重复取消"),
+    ORDER_CANCELED(528, "订单已经取消"),
+    ORDER_CANCEL_EXPIRED(529, "订单已经超过退款期限"),
+    APPLICATION_CANCEL_FAILED(530, "申请取消失败"),
+    AUDIT_ORDER_FAIL(531, "审核申请失败"),
+    RECHARGE_FAIL(532, "充值失败");
 
 
     final int code;

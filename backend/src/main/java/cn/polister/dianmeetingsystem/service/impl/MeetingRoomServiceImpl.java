@@ -1,12 +1,15 @@
 package cn.polister.dianmeetingsystem.service.impl;
 
 import cn.hutool.core.bean.BeanUtil;
+import cn.polister.dianmeetingsystem.constants.MeetingRoomConstants;
 import cn.polister.dianmeetingsystem.entity.Account;
 import cn.polister.dianmeetingsystem.entity.MeetingRoom;
 import cn.polister.dianmeetingsystem.entity.RoomOrder;
 import cn.polister.dianmeetingsystem.entity.RoomTimeSlot;
 import cn.polister.dianmeetingsystem.entity.dto.MeetingRoomDto;
 import cn.polister.dianmeetingsystem.entity.vo.MeetingRoomVo;
+import cn.polister.dianmeetingsystem.enums.AppHttpCodeEnum;
+import cn.polister.dianmeetingsystem.exception.SystemException;
 import cn.polister.dianmeetingsystem.mapper.MeetingRoomMapper;
 import cn.polister.dianmeetingsystem.service.AccountService;
 import cn.polister.dianmeetingsystem.service.MeetingRoomService;
@@ -24,6 +27,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * (MeetingRoom)表服务实现类
@@ -115,5 +119,20 @@ public class MeetingRoomServiceImpl extends ServiceImpl<MeetingRoomMapper, Meeti
 
             return vo;
         });
+    }
+
+    @Override
+    public void setMeetingRoomStatus(Long roomId, String status) {
+        MeetingRoom meetingRoom = this.getById(roomId);
+        if (Objects.isNull(meetingRoom)) {
+            throw new SystemException(AppHttpCodeEnum.DATA_NOT_EXIST);
+        }
+        if (!MeetingRoomConstants.ROOM_STATUS_FREE.equals(status)
+                && !MeetingRoomConstants.ROOM_STATUS_MAINTENANCE.equals(status)
+                && !MeetingRoomConstants.ROOM_STATUS_USING.equals(status)) {
+                    throw new SystemException(AppHttpCodeEnum.PARAMETER_INVALID);
+                }
+        meetingRoom.setRoomStatus(status);
+        this.updateById(meetingRoom);
     }
 }
