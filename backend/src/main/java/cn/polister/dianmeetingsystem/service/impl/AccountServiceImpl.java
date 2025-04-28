@@ -161,7 +161,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
             throw new SystemException(AppHttpCodeEnum.USER_BANNED);
         }
 
-        StpUtil.login(account.getId());
+        StpUtil.login(account.getId(), dto.getRememberMe());
         return new LoginVo(StpUtil.getTokenValue(), BeanUtil.toBean(account, UserInfoVo.class));
     }
 
