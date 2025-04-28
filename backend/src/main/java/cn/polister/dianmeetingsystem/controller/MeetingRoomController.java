@@ -1,6 +1,7 @@
 package cn.polister.dianmeetingsystem.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.MeetingRoom;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
@@ -42,7 +43,7 @@ public class MeetingRoomController {
     // 删除会议室
     @Operation(summary = "分页获取会议室列表", description = "分页查询会议室信息，支持类型和状态筛选")
     @GetMapping("/page")
-    @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
+    @SaCheckRole(value = {UserConstants.USER_ROLE_WORKER, UserConstants.USER_ROLE_ADMIN}, mode = SaMode.OR)
     public ResponseResult<Page<MeetingRoomVo>> getMeetingRoomsByPage(
             @RequestParam Integer pageNum,
             @RequestParam Integer pageSize,
@@ -59,6 +60,14 @@ public class MeetingRoomController {
     @DeleteMapping("/{id}")
     public ResponseResult<Void> deleteMeetingRoom(@PathVariable Long id) {
         meetingRoomService.deleteMeetingRoom(id);
+        return ResponseResult.okResult();
+    }
+
+    @Operation(summary = "设置会议室状态（员工用）", description = "设置会议室状态（员工用） 支持三种：空闲、使用、维护")
+    @SaCheckRole(value = {UserConstants.USER_ROLE_WORKER, UserConstants.USER_ROLE_ADMIN}, mode = SaMode.OR)
+    @PutMapping("/status")
+    public ResponseResult<Void> setMeetingRoomStatus(@RequestParam Long roomId, @RequestParam String status) {
+        meetingRoomService.setMeetingRoomStatus(roomId, status);
         return ResponseResult.okResult();
     }
 }

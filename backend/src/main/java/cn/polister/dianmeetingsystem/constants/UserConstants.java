@@ -1,6 +1,7 @@
 package cn.polister.dianmeetingsystem.constants;
 
 public class UserConstants {
+
     private UserConstants() {}
 
     /**
@@ -38,4 +39,6 @@ public class UserConstants {
      * 用户角色：管理员
      */
     public static final String USER_ROLE_ADMIN = "admin";
+
+    public static final String USER_REDIS_LOCK_KEY = "user:lock:";
 }

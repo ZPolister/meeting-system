@@ -2,6 +2,7 @@ package cn.polister.dianmeetingsystem.controller;
 
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.Account;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;

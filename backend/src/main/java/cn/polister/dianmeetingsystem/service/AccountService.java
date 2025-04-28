@@ -10,6 +10,8 @@ import cn.polister.dianmeetingsystem.entity.vo.LoginVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
+
 
 /**
  * 账户表(Account)表服务接口
@@ -38,4 +40,10 @@ public interface AccountService extends IService<Account> {
     Boolean addUser(UserInfoAdminDto userInfoAdminDto);
 
     Void resetPassword(ResetPasswordDto dto);
+
+    void payOrder(BigDecimal totalPrice, Long userId);
+
+    void refundOrder(BigDecimal totalPrice, Long userId);
+
+    void rechargeBalance(long loginIdAsLong, BigDecimal amount);
 }

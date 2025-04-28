@@ -15,6 +15,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+
 @RestController
 @RequestMapping("/api/account")
 @Tag(name = "用户信息管理模块", description = "处理用户信息的获取和更新")
@@ -43,6 +45,17 @@ public class AccountController {
         Account account = BeanUtil.toBean(dto, Account.class);
         account.setId(StpUtil.getLoginIdAsLong());
         accountService.updateById(account);
+        return ResponseResult.okResult();
+    }
+
+    @PutMapping("/balance")
+    @SaCheckLogin
+    @Operation(summary = "充值余额", description = "充值当前登录用户的余额")
+    @ApiResponse(responseCode = "200", description = "成功充值余额")
+    public ResponseResult<Void> rechargeBalance(
+            @Parameter(description = "充值金额", required = true) @RequestParam BigDecimal amount
+    ) {
+        accountService.rechargeBalance(StpUtil.getLoginIdAsLong(), amount);
         return ResponseResult.okResult();
     }
 }

@@ -20,4 +20,6 @@ public interface MeetingRoomService extends IService<MeetingRoom> {
     void deleteMeetingRoom(Long id);
 
     Page<MeetingRoomVo> getMeetingRoomsByPage(Integer pageNum, Integer pageSize, String roomType, String roomStatus);
+
+    void setMeetingRoomStatus(Long roomId, String status);
 }
