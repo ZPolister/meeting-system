@@ -1,4 +1,7 @@
 spring:
+  jackson:
+    time-zone: GMT+8
+    date-format: yyyy-MM-dd HH:mm:ss
   data:
     # redis配置
     redis:
@@ -23,7 +26,7 @@ spring:
           # 连接池中的最小空闲连接
           min-idle: 0
   application:
-    name: info-sys
+    name: dian-meeting-system
   datasource:
     url: jdbc:mysql://${mysql_url}/${mysql_database_name}?characterEncoding=utf-8&serverTimezone=Asia/Shanghai
     username: ${mysql_username}

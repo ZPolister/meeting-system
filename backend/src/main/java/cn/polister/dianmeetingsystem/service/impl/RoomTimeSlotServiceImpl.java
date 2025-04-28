@@ -3,6 +3,7 @@ package cn.polister.dianmeetingsystem.service.impl;
 import cn.polister.dianmeetingsystem.entity.RoomTimeSlot;
 import cn.polister.dianmeetingsystem.mapper.RoomTimeSlotMapper;
 import cn.polister.dianmeetingsystem.service.RoomTimeSlotService;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import org.springframework.stereotype.Service;
 
@@ -15,4 +16,11 @@ import org.springframework.stereotype.Service;
 @Service("roomTimeSlotService")
 public class RoomTimeSlotServiceImpl extends ServiceImpl<RoomTimeSlotMapper, RoomTimeSlot> implements RoomTimeSlotService {
 
+    @Override
+    public void removeByRoomId(Long roomId) {
+        // 使用wrapper条件构造器删除指定roomId的记录
+        LambdaQueryWrapper<RoomTimeSlot> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(RoomTimeSlot::getRoomId, roomId);
+        this.remove(wrapper);
+    }
 }

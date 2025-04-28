@@ -1,8 +1,12 @@
 package cn.polister.dianmeetingsystem.entity;
 
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import java.io.Serializable;
+
+import cn.polister.dianmeetingsystem.constants.MeetingRoomConstants;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,7 +23,7 @@ import com.baomidou.mybatisplus.annotation.TableName;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("room_time_slot")
-public class RoomTimeSlot  {
+public class RoomTimeSlot {
 @TableId
     private Long id;
 
@@ -28,9 +32,14 @@ public class RoomTimeSlot  {
 
     private Date timeSlot;
 
-    private Integer statusType;
+    private String statusType;
 
     private Integer delFlag;
 
-
+    public RoomTimeSlot(Long roomId, LocalDateTime timeSlot) {
+        this.roomId = roomId;
+        this.timeSlot = Timestamp.valueOf(timeSlot);
+        this.statusType = MeetingRoomConstants.ROOM_STATUS_FREE;
+        this.delFlag = 0;
+    }
 }

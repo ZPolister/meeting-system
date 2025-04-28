@@ -30,6 +30,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 
@@ -122,7 +123,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         Account account = BeanUtil.toBean(dto, Account.class);
         account.setPassword(PasswordUtil.encode(dto.getPassword()));
         account.setRoleName(UserConstants.USER_ROLE_NORMAL);
-        account.setBalance(0.0);
+        account.setBalance(new BigDecimal(0));
         account.setStatusType(UserConstants.USER_STATUS_WAIT_AUDIT);
 
         accountMapper.insert(account);
@@ -236,6 +237,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
 
         account.setStatusType(UserConstants.USER_STATUS_NORMAL);
+        StpUtil.untieDisable(userId);
         return this.updateById(account);
     }
 
