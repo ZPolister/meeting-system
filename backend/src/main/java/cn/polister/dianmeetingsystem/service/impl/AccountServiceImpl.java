@@ -237,6 +237,7 @@ public class AccountServiceImpl extends ServiceImpl<AccountMapper, Account> impl
         }
 
         account.setStatusType(UserConstants.USER_STATUS_NORMAL);
+        StpUtil.untieDisable(userId);
         return this.updateById(account);
     }
 
