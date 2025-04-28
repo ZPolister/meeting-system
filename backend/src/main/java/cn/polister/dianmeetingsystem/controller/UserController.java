@@ -36,7 +36,7 @@ public class UserController {
 
     @Operation(summary = "审批用户注册", description = "通过待审批或未通过的用户的注册申请")
     @PostMapping("/audit/{userId}")
-    @SaCheckRole(value = {UserConstants.USER_ROLE_ADMIN, UserConstants.USER_ROLE_WORKER}, mode = SaMode.OR)
+    @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
     public ResponseResult<Boolean> auditRegister(@PathVariable Long userId) {
         return ResponseResult.okResult(accountService.auditRegister(userId));
     }

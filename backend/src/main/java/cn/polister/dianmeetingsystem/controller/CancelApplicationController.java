@@ -1,6 +1,7 @@
 package cn.polister.dianmeetingsystem.controller;
 
 import cn.dev33.satoken.annotation.SaCheckRole;
+import cn.dev33.satoken.annotation.SaMode;
 import cn.dev33.satoken.stp.StpUtil;
 import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.CancellationApplication;
@@ -33,7 +34,7 @@ public class CancelApplicationController {
 
     @Operation(summary = "同意取消订单申请", description = "同意取消订单申请")
     @PostMapping("/approve")
-    @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
+    @SaCheckRole(value = {UserConstants.USER_ROLE_ADMIN, UserConstants.USER_ROLE_WORKER}, mode = SaMode.OR)
     public ResponseResult<Boolean> approveCancelApplication(@RequestBody ApplicationAuditDto dto) {
         Long id = StpUtil.getLoginIdAsLong();
         return cancellationApplicationService.approveCancelApplication(id, dto);
@@ -41,7 +42,7 @@ public class CancelApplicationController {
 
     @Operation(summary = "拒绝取消订单申请", description = "拒绝取消订单申请")
     @PostMapping("/reject")
-    @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
+    @SaCheckRole(value = {UserConstants.USER_ROLE_ADMIN, UserConstants.USER_ROLE_WORKER}, mode = SaMode.OR)
     public ResponseResult<Boolean> rejectCancelApplication(@RequestBody ApplicationAuditDto dto) {
         Long id = StpUtil.getLoginIdAsLong();
         return cancellationApplicationService.rejectCancelApplication(id, dto);
