@@ -96,6 +96,7 @@ public class CancellationApplicationServiceImpl extends ServiceImpl<Cancellation
                     roomOrder.getStartTime(), roomOrder.getEndTime(),
                     MeetingRoomConstants.ROOM_STATUS_FREE);
             roomOrder.setOrderStatus(OrderConstants.ORDER_STATUS_CANCELED);
+            roomOrder.setCancelTime(new Date());
             roomOrderMapper.updateById(roomOrder);
 
 

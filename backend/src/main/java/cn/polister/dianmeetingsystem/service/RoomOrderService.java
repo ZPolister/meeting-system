@@ -30,5 +30,7 @@ public interface RoomOrderService extends IService<RoomOrder> {
 
     void cancelOrder(CancelOrderDto cancelOrderDto, Long userId);
 
+    void removeExpiredOrder(Long orderId);
+
     void cancelCancelOrder(Long orderId, Long userId);
 }

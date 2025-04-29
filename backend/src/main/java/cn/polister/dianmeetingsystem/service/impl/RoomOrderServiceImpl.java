@@ -219,6 +219,7 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
                         roomOrder.getStartTime(), roomOrder.getEndTime(),
                         MeetingRoomConstants.ROOM_STATUS_FREE);
                 roomOrder.setOrderStatus(OrderConstants.ORDER_STATUS_CANCELED);
+                roomOrder.setCancelTime(new Date());
                 this.updateById(roomOrder);
                 return;
             }
@@ -248,6 +249,33 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
             redissonLock.unlock(OrderConstants.ORDER_REDIS_LOCK_KEY + dto.getOrderId());
         }
     }
+
+    @Override
+    @Transactional
+    public void removeExpiredOrder(Long orderId) {
+        if (!redissonLock.lock(OrderConstants.ORDER_REDIS_LOCK_KEY + orderId,
+                OrderConstants.ORDER_REDIS_KEY_EXPIRED)) {
+            throw new SystemException(AppHttpCodeEnum.ORDER_CANCEL_FAILED);
+        }
+
+        try {
+            RoomOrder roomOrder = this.getById(orderId);
+            if (Objects.isNull(roomOrder)) {
+                throw new SystemException(AppHttpCodeEnum.ORDER_NOT_EXIST);
+            }
+            if (OrderConstants.ORDER_STATUS_WAIT_PAY.equals(roomOrder.getOrderStatus())) {
+                roomOrder.setOrderStatus(OrderConstants.ORDER_STATUS_EXPIRED);
+                roomOrder.setCancelTime(new Date());
+                this.updateById(roomOrder);
+                roomTimeSlotService.updateTimeSlotStatus(roomOrder.getRoomId(),
+                        roomOrder.getStartTime(), roomOrder.getEndTime(),
+                        MeetingRoomConstants.ROOM_STATUS_FREE);
+            }
+        } finally {
+            redissonLock.unlock(OrderConstants.ORDER_REDIS_LOCK_KEY + orderId);
+        }
+    }
+
 
     @Override
     public void cancelCancelOrder(Long orderId, Long userId) {
