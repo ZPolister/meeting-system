@@ -15,4 +15,6 @@ public class OrderConstants {
     public static final Long ORDER_REDIS_KEY_EXPIRED = 10000L;
 
     public static final String ORDER_REDIS_LOCK_KEY = "order:lock:";
+
+    public static final String ORDER_REDIS_LOCK_KEY_SCHEDULED = "order:scheduled";
 }
