@@ -23,7 +23,7 @@ public class CancelApplicationController {
 
     @Operation(summary = "获取取消订单申请列表", description = "分页获取取消订单申请列表")
     @GetMapping("/list")
-    @SaCheckRole(UserConstants.USER_ROLE_ADMIN)
+    @SaCheckRole(value = {UserConstants.USER_ROLE_ADMIN, UserConstants.USER_ROLE_WORKER}, mode = SaMode.OR)
     public ResponseResult<Page<CancellationApplication>> getCancelApplicationList(
         @RequestParam Integer pageNum,
         @RequestParam Integer pageSize,
