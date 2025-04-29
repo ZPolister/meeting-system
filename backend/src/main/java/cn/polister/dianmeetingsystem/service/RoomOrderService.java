@@ -5,6 +5,7 @@ import cn.polister.dianmeetingsystem.entity.RoomOrder;
 import cn.polister.dianmeetingsystem.entity.dto.CancelOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomRecommendDto;
+import cn.polister.dianmeetingsystem.entity.vo.RoomOrderVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomRecommendVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
@@ -33,4 +34,6 @@ public interface RoomOrderService extends IService<RoomOrder> {
     void removeExpiredOrder(Long orderId);
 
     void cancelCancelOrder(Long orderId, Long userId);
+
+    RoomOrderVo getCancelOrder(Long orderId, Long userId);
 }

@@ -2,11 +2,13 @@ package cn.polister.dianmeetingsystem.controller;
 
 import cn.dev33.satoken.annotation.SaCheckLogin;
 import cn.dev33.satoken.stp.StpUtil;
+import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
 import cn.polister.dianmeetingsystem.entity.RoomOrder;
 import cn.polister.dianmeetingsystem.entity.dto.CancelOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomRecommendDto;
+import cn.polister.dianmeetingsystem.entity.vo.RoomOrderVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomRecommendVo;
 import cn.polister.dianmeetingsystem.service.RoomOrderService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
@@ -75,5 +77,13 @@ public class RoomOrderController {
         Long userId = StpUtil.getLoginIdAsLong();
         roomOrderService.cancelCancelOrder(orderId, userId);
         return ResponseResult.okResult();
+    }
+
+    @GetMapping("/cancel/{orderId}")
+    @SaCheckLogin
+    @Operation(summary = "根据id获取取消订单的申请所有相关信息")
+    public ResponseResult<RoomOrderVo> getCancelOrder(@PathVariable Long orderId) {
+        Long userId = StpUtil.getLoginIdAsLong();
+        return ResponseResult.okResult(roomOrderService.getCancelOrder(orderId, userId));
     }
 }

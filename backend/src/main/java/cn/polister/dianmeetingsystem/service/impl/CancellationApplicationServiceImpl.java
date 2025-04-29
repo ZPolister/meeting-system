@@ -7,7 +7,7 @@ import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.CancellationApplication;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
 import cn.polister.dianmeetingsystem.entity.RoomOrder;
-import cn.polister.dianmeetingsystem.entity.vo.ApplicationAuditDto;
+import cn.polister.dianmeetingsystem.entity.dto.ApplicationAuditDto;
 import cn.polister.dianmeetingsystem.enums.AppHttpCodeEnum;
 import cn.polister.dianmeetingsystem.exception.SystemException;
 import cn.polister.dianmeetingsystem.mapper.CancellationApplicationMapper;
