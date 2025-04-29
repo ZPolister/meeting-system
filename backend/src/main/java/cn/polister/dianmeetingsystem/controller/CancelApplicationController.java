@@ -6,7 +6,7 @@ import cn.dev33.satoken.stp.StpUtil;
 import cn.polister.dianmeetingsystem.constants.UserConstants;
 import cn.polister.dianmeetingsystem.entity.CancellationApplication;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
-import cn.polister.dianmeetingsystem.entity.vo.ApplicationAuditDto;
+import cn.polister.dianmeetingsystem.entity.dto.ApplicationAuditDto;
 import cn.polister.dianmeetingsystem.service.CancellationApplicationService;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import io.swagger.v3.oas.annotations.Operation;

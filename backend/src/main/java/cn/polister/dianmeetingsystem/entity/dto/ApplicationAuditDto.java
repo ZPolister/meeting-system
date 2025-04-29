@@ -1,4 +1,4 @@
-package cn.polister.dianmeetingsystem.entity.vo;
+package cn.polister.dianmeetingsystem.entity.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -2,7 +2,7 @@ package cn.polister.dianmeetingsystem.service;
 
 import cn.polister.dianmeetingsystem.entity.CancellationApplication;
 import cn.polister.dianmeetingsystem.entity.ResponseResult;
-import cn.polister.dianmeetingsystem.entity.vo.ApplicationAuditDto;
+import cn.polister.dianmeetingsystem.entity.dto.ApplicationAuditDto;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 

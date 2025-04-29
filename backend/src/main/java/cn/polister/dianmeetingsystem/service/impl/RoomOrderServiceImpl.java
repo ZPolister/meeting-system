@@ -1,18 +1,19 @@
 package cn.polister.dianmeetingsystem.service.impl;
 
+import cn.dev33.satoken.stp.StpUtil;
 import cn.hutool.core.bean.BeanUtil;
 import cn.polister.dianmeetingsystem.constants.CancelApplicationConstants;
 import cn.polister.dianmeetingsystem.constants.MeetingRoomConstants;
 import cn.polister.dianmeetingsystem.constants.OrderConstants;
 import cn.polister.dianmeetingsystem.constants.UserConstants;
-import cn.polister.dianmeetingsystem.entity.CancellationApplication;
-import cn.polister.dianmeetingsystem.entity.MeetingRoom;
-import cn.polister.dianmeetingsystem.entity.ResponseResult;
-import cn.polister.dianmeetingsystem.entity.RoomOrder;
+import cn.polister.dianmeetingsystem.entity.*;
 import cn.polister.dianmeetingsystem.entity.dto.CancelOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomRecommendDto;
+import cn.polister.dianmeetingsystem.entity.vo.MeetingRoomInfoVo;
+import cn.polister.dianmeetingsystem.entity.vo.RoomOrderVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomRecommendVo;
+import cn.polister.dianmeetingsystem.entity.vo.UserInfoVo;
 import cn.polister.dianmeetingsystem.enums.AppHttpCodeEnum;
 import cn.polister.dianmeetingsystem.exception.SystemException;
 import cn.polister.dianmeetingsystem.mapper.MeetingRoomMapper;
@@ -306,6 +307,37 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
         } finally {
             redissonLock.unlock(OrderConstants.ORDER_REDIS_LOCK_KEY + orderId);
         }
+    }
+
+    @Override
+    public RoomOrderVo getCancelOrder(Long orderId, Long userId) {
+        RoomOrder roomOrder = this.getById(orderId);
+        if (Objects.isNull(roomOrder)) {
+            throw new SystemException(AppHttpCodeEnum.ORDER_NOT_EXIST);
+        }
+        if (!Objects.equals(roomOrder.getUserId(), userId)
+                && StpUtil.hasRole(UserConstants.USER_ROLE_NORMAL)) {
+            throw new SystemException(AppHttpCodeEnum.NO_OPERATOR_AUTH);
+        }
+
+        RoomOrderVo roomOrderVo = BeanUtil.copyProperties(roomOrder, RoomOrderVo.class);
+
+        Account account = accountService.getById(roomOrder.getUserId());
+        UserInfoVo userInfoVo = BeanUtil.copyProperties(account, UserInfoVo.class);
+        userInfoVo.setBalance(null);
+
+        MeetingRoom meetingRoom = meetingRoomMapper.selectById(roomOrder.getRoomId());
+        MeetingRoomInfoVo meetingRoomInfoVo = BeanUtil.copyProperties(meetingRoom, MeetingRoomInfoVo.class);
+
+        LambdaQueryWrapper<CancellationApplication> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CancellationApplication::getOrderId, orderId)
+                .orderByDesc(CancellationApplication::getCreateTime);
+        List<CancellationApplication> cancellationApplicationList = cancellationApplicationService.list(wrapper);
+        roomOrderVo.setCancellationApplicationList(cancellationApplicationList);
+        roomOrderVo.setUserInfo(userInfoVo);
+        roomOrderVo.setMeetingRoomInfo(meetingRoomInfoVo);
+
+        return roomOrderVo;
     }
 
     private BigDecimal calculateTotalPrice(MeetingRoom room, Date startTime, Date endTime) {
