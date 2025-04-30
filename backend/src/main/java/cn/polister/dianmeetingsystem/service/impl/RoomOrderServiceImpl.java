@@ -166,12 +166,13 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
             if (OrderConstants.ORDER_STATUS_EXPIRED.equals(roomOrder.getOrderStatus())) {
                 throw new SystemException(AppHttpCodeEnum.ORDER_EXPIRED);
             }
-            if (OrderConstants.ORDER_STATUS_PAYED.equals(roomOrder.getOrderStatus())) {
+            if (Objects.nonNull(roomOrder.getPaymentTime())) {
                 throw new SystemException(AppHttpCodeEnum.ORDER_PAYED);
             }
 
             accountService.payOrder(roomOrder.getTotalPrice(), userId);
             roomOrder.setOrderStatus(OrderConstants.ORDER_STATUS_PAYED);
+            roomOrder.setPaymentTime(new Date());
             this.updateById(roomOrder);
             roomTimeSlotService.updateTimeSlotStatus(roomOrder.getRoomId(),
                     roomOrder.getStartTime(), roomOrder.getEndTime(),
