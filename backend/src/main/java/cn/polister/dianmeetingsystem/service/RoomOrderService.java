@@ -5,11 +5,13 @@ import cn.polister.dianmeetingsystem.entity.RoomOrder;
 import cn.polister.dianmeetingsystem.entity.dto.CancelOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomRecommendDto;
+import cn.polister.dianmeetingsystem.entity.vo.RefundNumberVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomOrderVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomRecommendVo;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 
@@ -36,4 +38,6 @@ public interface RoomOrderService extends IService<RoomOrder> {
     void cancelCancelOrder(Long orderId, Long userId);
 
     RoomOrderVo getCancelOrder(Long orderId, Long userId);
+
+    RefundNumberVo getRefundAmount(Long orderId, Long userId);
 }
