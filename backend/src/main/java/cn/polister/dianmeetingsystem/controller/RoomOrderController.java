@@ -8,6 +8,7 @@ import cn.polister.dianmeetingsystem.entity.RoomOrder;
 import cn.polister.dianmeetingsystem.entity.dto.CancelOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomRecommendDto;
+import cn.polister.dianmeetingsystem.entity.vo.RefundNumberVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomOrderVo;
 import cn.polister.dianmeetingsystem.entity.vo.RoomRecommendVo;
 import cn.polister.dianmeetingsystem.service.RoomOrderService;
@@ -17,6 +18,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -70,7 +72,7 @@ public class RoomOrderController {
         return ResponseResult.okResult();
     }
 
-    @PostMapping("/cancel/cānceled/{orderId}")
+    @PostMapping("/cancel/canceled/{orderId}")
     @SaCheckLogin
     @Operation(summary = "取消取消订单的申请")
     public ResponseResult<Void> cancelCancelOrder(@PathVariable Long orderId) {
@@ -85,5 +87,13 @@ public class RoomOrderController {
     public ResponseResult<RoomOrderVo> getCancelOrder(@PathVariable Long orderId) {
         Long userId = StpUtil.getLoginIdAsLong();
         return ResponseResult.okResult(roomOrderService.getCancelOrder(orderId, userId));
+    }
+
+    @GetMapping("/cancel/refund/{orderId}")
+    @SaCheckLogin
+    @Operation(summary = "根据id获取取消订单的退款金额")
+    public ResponseResult<RefundNumberVo> getRefundAmount(@PathVariable Long orderId) {
+        Long userId = StpUtil.getLoginIdAsLong();
+        return ResponseResult.okResult(roomOrderService.getRefundAmount(orderId, userId));
     }
 }

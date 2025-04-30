@@ -10,10 +10,7 @@ import cn.polister.dianmeetingsystem.entity.*;
 import cn.polister.dianmeetingsystem.entity.dto.CancelOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomOrderDto;
 import cn.polister.dianmeetingsystem.entity.dto.RoomRecommendDto;
-import cn.polister.dianmeetingsystem.entity.vo.MeetingRoomInfoVo;
-import cn.polister.dianmeetingsystem.entity.vo.RoomOrderVo;
-import cn.polister.dianmeetingsystem.entity.vo.RoomRecommendVo;
-import cn.polister.dianmeetingsystem.entity.vo.UserInfoVo;
+import cn.polister.dianmeetingsystem.entity.vo.*;
 import cn.polister.dianmeetingsystem.enums.AppHttpCodeEnum;
 import cn.polister.dianmeetingsystem.exception.SystemException;
 import cn.polister.dianmeetingsystem.mapper.MeetingRoomMapper;
@@ -206,13 +203,9 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
             if (OrderConstants.ORDER_STATUS_CANCELED.equals(roomOrder.getOrderStatus())) {
                 throw new SystemException(AppHttpCodeEnum.ORDER_CANCELED);
             }
+
             if (OrderConstants.ORDER_STATUS_EXPIRED.equals(roomOrder.getOrderStatus())) {
                 throw new SystemException(AppHttpCodeEnum.ORDER_EXPIRED);
-            }
-
-            BigDecimal refundPercent = this.calculateRefundNumber(roomOrder.getStartTime());
-            if (BigDecimal.ZERO.equals(refundPercent)) {
-                throw new SystemException(AppHttpCodeEnum.ORDER_CANCEL_EXPIRED);
             }
 
             // 没付钱，直接取消
@@ -222,8 +215,14 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
                         MeetingRoomConstants.ROOM_STATUS_FREE);
                 roomOrder.setOrderStatus(OrderConstants.ORDER_STATUS_CANCELED);
                 roomOrder.setCancelTime(new Date());
+                roomOrder.setTotalPrice(BigDecimal.ZERO);
                 this.updateById(roomOrder);
                 return;
+            }
+
+            BigDecimal refundPercent = this.calculateRefundPercent(roomOrder.getStartTime());
+            if (BigDecimal.ZERO.equals(refundPercent)) {
+                throw new SystemException(AppHttpCodeEnum.ORDER_CANCEL_EXPIRED);
             }
 
             // 找到最早的一个退款申请
@@ -341,6 +340,32 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
         return roomOrderVo;
     }
 
+    @Override
+    public RefundNumberVo getRefundAmount(Long orderId, Long userId) {
+        RoomOrder roomOrder = this.getById(orderId);
+        if (Objects.isNull(roomOrder)) {
+            throw new SystemException(AppHttpCodeEnum.ORDER_NOT_EXIST);
+        }
+        if (!Objects.equals(roomOrder.getUserId(), userId)
+                && StpUtil.hasRole(UserConstants.USER_ROLE_NORMAL)) {
+            throw new SystemException(AppHttpCodeEnum.NO_OPERATOR_AUTH);
+        }
+
+        // 找到最早的一个退款申请
+        LambdaQueryWrapper<CancellationApplication> wrapper = new LambdaQueryWrapper<>();
+        wrapper.eq(CancellationApplication::getOrderId, orderId)
+                .orderByAsc(CancellationApplication::getCreateTime).last("limit 1");
+        CancellationApplication cancellationApplication = cancellationApplicationService.getOne(wrapper);
+        if (Objects.isNull(cancellationApplication)) {
+            BigDecimal refundPercent = calculateRefundPercent(roomOrder.getStartTime());
+            return new RefundNumberVo(refundPercent, roomOrder.getTotalPrice().multiply(refundPercent));
+        }
+
+        return new RefundNumberVo(cancellationApplication.getRefundPercent(),
+                roomOrder.getTotalPrice().multiply(cancellationApplication.getRefundPercent()));
+
+    }
+
     private BigDecimal calculateTotalPrice(MeetingRoom room, Date startTime, Date endTime) {
         return room.getPricePerHour().multiply(new BigDecimal(
                 Duration.between(
@@ -350,7 +375,7 @@ public class RoomOrderServiceImpl extends ServiceImpl<RoomOrderMapper, RoomOrder
         ));
     }
 
-    private BigDecimal calculateRefundNumber(Date startTime) {
+    private BigDecimal calculateRefundPercent(Date startTime) {
         Date now = new Date();
         long hours = Duration.between(now.toInstant(), startTime.toInstant()).toHours();
 
