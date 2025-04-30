@@ -43,7 +43,7 @@ public class MeetingRoomController {
     // 删除会议室
     @Operation(summary = "分页获取会议室列表", description = "分页查询会议室信息，支持类型和状态筛选")
     @GetMapping("/page")
-    @SaCheckRole(value = {UserConstants.USER_ROLE_WORKER, UserConstants.USER_ROLE_ADMIN}, mode = SaMode.OR)
+//    @SaCheckRole(value = {UserConstants.USER_ROLE_WORKER, UserConstants.USER_ROLE_ADMIN}, mode = SaMode.OR)
     public ResponseResult<Page<MeetingRoomVo>> getMeetingRoomsByPage(
             @RequestParam Integer pageNum,
             @RequestParam Integer pageSize,
